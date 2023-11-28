@@ -71,29 +71,40 @@
         </div>
       </div>
     </nav>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %} {% endif %} {% endwith %}
 
     <div class="container">
       <h1>Image editor</h1>
       <form action="/edit" method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="image" class="form-label">Image</label>
-          <input class="form-control" type="file" id="image" name="image" />
+          <input
+            class="form-control"
+            type="file"
+            name="file"
+            id="image"
+            name="image"
+          />
         </div>
         <div class="form-floating">
           <select
+            name="operation"
             class="form-select"
             id="floatingSelect"
             aria-label="Floating label select example"
           >
             <option selected>Open this select menu</option>
-            <option value="cpng">Conert to PNG</option>
-            <option value="cgray">Conert to Grayscale</option>
-            <option value="cwebp">Conert to Webp</option>
-            <option value="cjpg">Conert to Jpg</option>
+            <option value="cpng">Convert to PNG</option>
+            <option value="cgray">Convert to Grayscale</option>
+            <option value="cwebp">Convert to Webp</option>
+            <option value="cjpg">Convert to Jpg</option>
           </select>
           <label for="floatingSelect">Works with selects</label>
         </div>
-        <button type="button" class="btn btn-success">Success</button>
+        <button type="submit" class="btn btn-success">Success</button>
       </form>
     </div>
 
