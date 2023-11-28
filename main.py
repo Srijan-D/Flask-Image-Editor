@@ -4,7 +4,7 @@ import os
 import cv2
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = { 'webp','png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'webp','png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -15,8 +15,22 @@ def processImage(filename,operation):
     match operation:
         case "cgray":
             imgProcessed=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            cv2.imwrite(f"static/{filename}",imgProcessed)
+            newFilename=f"static/{filename}"
+            cv2.imwrite(newFilename,imgProcessed)
+            return newFilename
 
+        case "cwebp":
+             newFilename=f"static/{filename.split('.')[0]}.webp"
+             cv2.imwrite(newFilename,img)    
+             return newFilename
+        case "cjpg":
+                newFilename=f"static/{filename.split('.')[0]}.jpg"
+                cv2.imwrite(newFilename,img)    
+                return newFilename
+        case "cpng":
+                newFilename=f"static/{filename.split('.')[0]}.png"
+                cv2.imwrite(newFilename,img)    
+                return newFilename  
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -43,11 +57,12 @@ def edit():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            processImage(filename,operation)
-            flash(f"Image has been processed and is available at <a href='/static/{filename}'>here</a>")
+            new=processImage(filename,operation)
+            flash(f"Image has been processed and is available at <a href='/{new}' target='_blank'>here</a>")
             return render_template("index.html")
         
         # return "File Uploaded Successfully"
 
 
 app.run(debug=True)
+# this debug=True is used to run the server in debug mode
